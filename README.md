@@ -143,6 +143,16 @@ curl -X POST http://localhost:3000/products/generate \
 **Request Body:**
 - `count` (optional): Number of products to generate (default: 1000)
 
+## Testing
+
+The backend includes unit and integration tests covering controllers, services, and security.
+
+```bash
+cd be
+npm test              # Run all tests
+npm run test:watch    # Run tests in watch mode
+```
+
 ## Future Improvements
 
 ### Database & Data Management
