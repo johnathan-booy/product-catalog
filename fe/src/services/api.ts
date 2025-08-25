@@ -9,5 +9,13 @@ export const api = {
       throw new Error(`Failed to fetch products: ${response.statusText}`)
     }
     return response.json()
+  },
+
+  async searchProducts(query: string): Promise<Product[]> {
+    const response = await fetch(`${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`)
+    if (!response.ok) {
+      throw new Error(`Failed to search products: ${response.statusText}`)
+    }
+    return response.json()
   }
 }
