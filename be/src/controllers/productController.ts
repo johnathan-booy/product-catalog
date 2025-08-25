@@ -14,8 +14,8 @@ export const getAllProducts = async (_req: Request, res: Response): Promise<void
 export const searchProducts = async (req: Request, res: Response): Promise<void> => {
   try {
     const { q } = req.query
-    
-    if (!q || typeof q !== 'string') {
+
+    if (!q || typeof q !== "string") {
       res.status(400).json({ message: "Query parameter 'q' is required" })
       return
     }
@@ -35,5 +35,17 @@ export const searchProducts = async (req: Request, res: Response): Promise<void>
   } catch (error) {
     console.error("Error searching products:", error)
     res.status(500).json({ message: "Error searching products" })
+  }
+}
+
+export const generateProducts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const productCount = req.body && typeof req.body.count === "number" ? req.body.count : 1000
+
+    await ProductService.generateProducts(productCount)
+    res.json({ message: `Successfully generated ${productCount} products` })
+  } catch (error) {
+    console.error("Error generating products:", error)
+    res.status(500).json({ message: "Error generating products" })
   }
 }
