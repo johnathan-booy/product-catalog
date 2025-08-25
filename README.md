@@ -1,6 +1,14 @@
 # Dynamic Product Catalog
 
-A full-stack application with Express.js backend and Vue.js frontend.
+A simple web application that allows users to search and filter product items based on their input.
+
+## Architecture
+
+The application is built as a monolith with a clear separation between frontend and backend:
+
+- **Backend (Express.js)**: API server that handles product data storage and retrieval using SQLite database with full-text search capabilities
+- **Frontend (Vue.js)**: Single-page application providing a search interface with real-time filtering and product display
+- **Database**: SQLite with full-text search indexing for efficient product queries
 
 ## Prerequisites
 
@@ -69,10 +77,10 @@ The backend will be running on `http://localhost:3000`. Visit this URL to see "A
    cd fe
    ```
 
-2. Use the same Node.js version:
+2. Use the correct Node.js version:
 
    ```bash
-   nvm use 21
+   nvm use
    ```
 
 3. Install dependencies:
@@ -93,3 +101,75 @@ The frontend will be running on `http://localhost:5173` (or the next available p
 1. Start the backend server first (from `/be` directory): `npm run dev`
 2. Start the frontend server (from `/fe` directory): `npm run dev`
 3. Open your browser to the frontend URL shown in the terminal
+
+## API Endpoints
+
+The backend provides three main API endpoints for managing and searching products:
+
+### 1. Get All Products
+Retrieve all products from the catalog.
+
+```bash
+curl http://localhost:3000/products
+```
+
+### 2. Search Products
+Search for products using a query string. The search uses full-text search capabilities.
+
+```bash
+# Basic search
+curl "http://localhost:3000/products/search?q=laptop"
+
+# Search with spaces (URL encoded)
+curl "http://localhost:3000/products/search?q=gaming%20mouse"
+```
+
+**Parameters:**
+- `q` (required): Search query string (max 100 characters)
+
+### 3. Generate Products
+Generate new sample products for testing and development.
+
+```bash
+# Generate 1000 products (default)
+curl -X POST http://localhost:3000/products/generate
+
+# Generate specific number of products
+curl -X POST http://localhost:3000/products/generate \
+  -H "Content-Type: application/json" \
+  -d '{"count": 500}'
+```
+
+**Request Body:**
+- `count` (optional): Number of products to generate (default: 1000)
+
+## Future Improvements
+
+### Database & Data Management
+
+- Migrate from SQLite to PostgreSQL for production scalability
+- Implement proper database migrations using a tool like Knex
+- Normalize the database schema (for example separate `categories` and `brands` tables)
+- Implement caching layer for frequently searched products
+
+### API & Backend
+
+- Add API versioning for better maintainability
+- Protect the POST endpoint for product generation with authentication
+- Implement request validation middleware
+- Add more granular error responses and logging
+
+### Frontend & User Experience
+
+- Flesh out the wireframe design into a polished UI
+- Implement loading states, empty states, and better responsive design
+- Add search filters (category, price range), sorting, and advanced search
+- Enhance error handling with user-friendly messages
+
+### Development & Operations
+
+- Share TypeScript types between frontend and backend
+- Expand test coverage for edge cases and integration scenarios
+- Add Docker configuration and CI/CD pipeline
+- Deploy to a cloud provider (e.g., Heroku, AWS)
+- Implement proper environment configuration management
