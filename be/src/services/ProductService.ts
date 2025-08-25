@@ -137,6 +137,8 @@ class ProductService {
 
   async search(term: string): Promise<ProductModel[]> {
     const db = getDatabase()
+    const sanitizedTerm = this.sanitizeFTSQuery(term)
+    
     const products = await db.all(`
       SELECT p.id, p.name, p.description, p.category, p.brand, p.price, p.quantity, p.sku, 
              p.releaseDate, p.availabilityStatus, p.customerRating, p.createdAt, p.updatedAt 
@@ -144,9 +146,16 @@ class ProductService {
       JOIN products p ON products_fts.rowid = p.id
       WHERE products_fts MATCH ?
       ORDER BY rank
-    `, [`${term}*`])
+    `, [`${sanitizedTerm}*`])
     
     return products.map(this.mapRowToProduct)
+  }
+
+  private sanitizeFTSQuery(term: string): string {
+    return term
+      .replace(/[^\w\s-]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
   }
 
   private mapRowToProduct(row: any): ProductModel {

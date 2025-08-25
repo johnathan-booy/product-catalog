@@ -20,7 +20,17 @@ export const searchProducts = async (req: Request, res: Response): Promise<void>
       return
     }
 
-    const products = await ProductService.search(q)
+    if (q.length > 100) {
+      res.status(400).json({ message: "Search query too long (max 100 characters)" })
+      return
+    }
+
+    if (q.trim().length === 0) {
+      res.status(400).json({ message: "Search query cannot be empty" })
+      return
+    }
+
+    const products = await ProductService.search(q.trim())
     res.json(products)
   } catch (error) {
     console.error("Error searching products:", error)
