@@ -135,6 +135,20 @@ class ProductService {
     return (result.changes ?? 0) > 0
   }
 
+  async search(term: string): Promise<ProductModel[]> {
+    const db = getDatabase()
+    const products = await db.all(`
+      SELECT p.id, p.name, p.description, p.category, p.brand, p.price, p.quantity, p.sku, 
+             p.releaseDate, p.availabilityStatus, p.customerRating, p.createdAt, p.updatedAt 
+      FROM products_fts 
+      JOIN products p ON products_fts.rowid = p.id
+      WHERE products_fts MATCH ?
+      ORDER BY rank
+    `, [`${term}*`])
+    
+    return products.map(this.mapRowToProduct)
+  }
+
   private mapRowToProduct(row: any): ProductModel {
     return {
       id: row.id,

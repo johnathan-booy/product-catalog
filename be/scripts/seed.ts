@@ -27,6 +27,14 @@ const seedDatabase = async () => {
       )
     `)
 
+    console.log("Creating FTS5 virtual table for search...")
+    await db.exec(`
+      CREATE VIRTUAL TABLE products_fts USING fts5(
+        name, description, category, brand, sku,
+        content='products', content_rowid='id'
+      )
+    `)
+
     console.log("Checking if products table needs seeding...")
     const existingProducts = await db.get("SELECT COUNT(*) as count FROM products")
     
@@ -117,6 +125,9 @@ const seedDatabase = async () => {
       }
       
       console.log(`Inserted ${sampleProducts.length} sample products`)
+      
+      console.log("Populating FTS5 virtual table...")
+      await db.exec(`INSERT INTO products_fts(products_fts) VALUES('rebuild')`)
     } else {
       console.log(`Products table already has ${existingProducts.count} products`)
     }
