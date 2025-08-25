@@ -6,19 +6,23 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon",
-    "build": "tsc"
+    "build": "tsc",
+    "seed": "ts-node scripts/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
+    "@types/sqlite3": "^5.1.0",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
