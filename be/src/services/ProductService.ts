@@ -188,6 +188,9 @@ class ProductService {
       }
       
       await db.run('COMMIT')
+      
+      console.log('Rebuilding FTS index for new products...')
+      await db.exec(`INSERT INTO products_fts(products_fts) VALUES('rebuild')`)
     } catch (error) {
       await db.run('ROLLBACK')
       throw error
